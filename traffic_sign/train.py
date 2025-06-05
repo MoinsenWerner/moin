@@ -14,7 +14,8 @@ def train_model(data_root: str, epochs: int, lr: float, batch_size: int, device:
     train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_set, batch_size=batch_size)
 
-    model = TrafficSignNet(num_classes=len(train_set.classes)).to(device)
+    # GTSRB has 43 classes
+    model = TrafficSignNet(num_classes=43).to(device)
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
@@ -29,7 +30,20 @@ def train_model(data_root: str, epochs: int, lr: float, batch_size: int, device:
             loss.backward()
             optimizer.step()
             running_loss += loss.item()
-        print(f"Epoch {epoch}, Loss: {running_loss / len(train_loader):.4f}")
+
+        model.eval()
+        correct, total = 0, 0
+        with torch.no_grad():
+            for images, labels in test_loader:
+                images, labels = images.to(device), labels.to(device)
+                outputs = model(images)
+                pred = outputs.argmax(1)
+                correct += (pred == labels).sum().item()
+                total += labels.size(0)
+
+        accuracy = 100.0 * correct / total
+        print(f"Epoch {epoch}, Loss: {running_loss / len(train_loader):.4f}, "
+              f"Test Acc: {accuracy:.2f}%")
 
     Path(save_path).parent.mkdir(parents=True, exist_ok=True)
     torch.save(model.state_dict(), save_path)

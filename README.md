@@ -2,6 +2,15 @@
 
 This project contains a simple convolutional neural network for classifying German traffic signs (GTSRB) and applying the model to a video feed.
 
+## Requirements
+
+Install the dependencies with:
+
+```bash
+pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cpu
+pip install opencv-python-headless
+```
+
 ## Training
 
 ```bash
