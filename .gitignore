@@ -1,0 +1,6 @@
+# Ignore dataset and logs
+/data/
+train.log
+traffic_sign/__pycache__/
+*.pyc
+__pycache__/
