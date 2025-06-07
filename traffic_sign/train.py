@@ -14,7 +14,13 @@ def train_model(data_root: str, epochs: int, lr: float, batch_size: int, device:
     train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_set, batch_size=batch_size)
 
-    model = TrafficSignNet(num_classes=len(train_set.classes)).to(device)
+    # torchvision's GTSRB dataset may not expose a ``classes`` attribute
+    try:
+        num_classes = len(train_set.classes)  # older versions
+    except AttributeError:
+        num_classes = len({label for _, label in train_set._samples})
+
+    model = TrafficSignNet(num_classes=num_classes).to(device)
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
