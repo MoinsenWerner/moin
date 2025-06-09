@@ -1,6 +1,6 @@
 # Traffic Sign Neural Network
 
-This project contains a simple convolutional neural network for classifying German traffic signs (GTSRB) and applying the model to a video feed.
+This project contains a convolutional neural network for classifying German traffic signs (GTSRB) and applying the model to a video feed. The network now includes additional convolutional layers, batch normalization and dropout for improved accuracy.
 
 ## Training
 
